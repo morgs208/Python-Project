@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>NEW MOMENT</title>
+    {% load static %}
+</head>
+<body style="background:transparent url('https://earthnworld.com/wp-content/uploads/2015/12/aurora-borealis-1-1024x683.jpg') no-repeat center center /cover; padding-bottom: 40px;">
+    <div class="container text-white">
+        <div class="row pt-2">
+            <div class="col-8">
+              <h1>{{existing_user.first_name}}, lets take a <span class="text-warning">MOMENT......</span></h1>
+            </div>
+            <div class="col-4 p-2">
+                <a class="border rounded float-right text-white p-2" href="/logout">LOGOUT</a>
+                <a class="border rounded text-white p-2 float-right" href="/home">HOME</a> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="col">
+                    {% if messages %}
+                    <div class="messages text-center">    
+                        {% for message in messages %}    
+                            <p {% if message.tags %} class="text-danger text-center {{ message.tags }}"{% endif %}>*{{ message }}*</p>    
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <h3>Click start when you are ready</h3>
+                <h1 class="mb-4"><span  id="my_timer">00:00:00</span></h1>
+                <button  class="btn-success" id="control" onclick ="change();">START</button>
+                <button class="btn-warning" id ="reset" onclick = "reset();">RESET</button>
+                <script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+                <p class="mt-5">Relaxing rain sounds if you would like:</p>
+                <p>
+                    <audio controls>
+                    <source src="{% static 'audio/light_rain.mp3' %}" type="audio/mpeg">
+                    </audio>
+                </p>
+                <img class="mt-3 border" style="width:55%;" src="https://zenawakened.com/wp-content/uploads/2017/08/buddha-nature-is-compressor.jpg">
+            </div>
+        
+        <div class="row mt-3">
+            <div class="col">
+                <h4 class="pb-2">Keep track of your <span class="text-warning">MOMENTS</span>:</h4>
+                <div class = "row">
+                    <div class="col">
+                        <form action="/proc_moment" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group pb-2">
+                              <label for="formGroupExampleInput">Title:</label>
+                              <input type="text" class="form-control w-75" id="Title" name = "title" placeholder="Must have title">
+                            </div>
+                            
+                            <div class="form-row pt-2">
+                                
+                                
+                                <div class="form-group">
+                                    <label>Minutes :</label>
+                                    <input type="text" class="form-control w-50" id="Duration" name = "duration_min" value="0"> 
+                                </div>
+                                <div class="form-group">
+                                    <label>Seconds:</label>
+                                    <input type="text" class="form-control w-50" id="D" name = "duration_sec" value="0"> 
+                                </div>
+                              
+                            </div>
+                            <div class="form-group pt-2">
+                                <label>Notes:</label>
+                                <textarea type="text" class="form-control w-75" id="Notes" name = "notes" placeholder="Only you can see your notes"></textarea>
+                              </div>
+                              <button type="submit" class="btn btn-warning pt-2 mt-4 text-white border">ADD MOMENT</button><img src="{% static 'images/candle.gif' %}" alt="candle">
+                          </form> 
+                         
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ </div>
+</body>
+</html>
+

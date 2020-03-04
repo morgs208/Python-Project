@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>HOME</title>
+    {% load static %}
+</head>
+
+<body style="background:transparent url('https://earthnworld.com/wp-content/uploads/2015/12/aurora-borealis-1-1024x683.jpg') no-repeat center center /cover; padding-bottom: 40px;">
+  <div class="container text-white">
+      <div class="row mt-5">
+          <div class="col">
+              <h2>Take a <span class="text-warning">MOMENT</span> and breathe........</h2>
+              
+          </div>
+          <div class="col">
+            <a class="border rounded float-right text-white p-2" href="/logout">LOGOUT</a>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col text-center">
+            <p>Click the button BELOW to begin your break</p>
+        </div>
+    </div>
+        <div class="row mt-4">
+            <div class="col text-center">
+                <img src="{% static 'images/candle.gif' %}" alt="candle">
+                <a class=" text-white border rounded p-3 bg-warning " href="/moment">TAKE A MOMENT</a>
+                <img src="{% static 'images/candle.gif' %}" alt="candle">
+            </div>
+        </div>
+       
+      
+      <div class="row" style="margin-top:40px;">
+          <div class="col">
+            <h4>{{existing_user.first_name}}, here are your <span class="text-warning">MOMENTS:</span></h4>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col mt-2">
+            {% for moment in all_moments %}
+                {% if moment.user.id == existing_user.id %}
+                    <div class="p-1 mt-3" style=" border-style:solid; border-width: 2px;">
+                        <p class="mt-1 border border-warning rounded p-2">You took a moment for {{moment.duration_min}} minutes and {{moment.duration_sec}} seconds on {{moment.updated_at}} Notes: {{moment.notes}} --<a class="text-danger"  href="/delete_moment/{{moment.id}}" name="Delete">Delete Moment</a></p>
+                    {% for comment in moment.moment_comments.all %}
+                        <p class="ml-4">{{comment.comment}} -- {{comment.user.first_name}} {{comment.user.last_name}} : {{comment.updated_at}}
+                    {% if moment.user.id == existing_user.id %}
+                            <a class="text-danger border-bottom" href="/delete_comment/{{comment.id}}" name="Delete">Delete Comment</a>
+                {% endif %}
+                    </p>
+            {% endfor %}
+                </div>
+
+                <form  class="mt-2" style="margin-left: 820px;" action="/add_comment" method="POST">
+                    {% csrf_token %}
+                    <input type = "hidden" value="{{moment.id}}" name="moment_id">
+                    <input type = "text" name="comment">
+                    <button class="btn-sm btn-danger text-white" submit">Comment</button>
+
+                </form>
+              
+            {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="row">
+         
+            <div class="col">
+                {% if messages %}
+                <div class="alert">    
+                    {% for message in messages %}    
+                        <script>alert("{{message}}")</script>   
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+              
+          
+      </div>
+
+      <div class="row">
+          <div class="col">
+              <h4 class="mt-5">Check out your friends <span class="text-warning">MOMENTS:</span></h4>
+            {% for moment in all_moments %}
+                {% if moment.user.id != existing_user.id %}
+                    <div class="p-1 mt-3" style=" border-style:solid; border-width: 2px;">
+                        <p class="mt-1 border border-warning rounded p-2">{{moment.user.first_name}} {{moment.user.last_name}} took a moment for {{moment.duration_min}} minutes and {{duration_sec}} seconds on {{moment.updated_at}}</p>
+                        {% for comment in moment.moment_comments.all %}
+                        <p class="ml-4">{{comment.comment}} -- {{comment.user.first_name}} {{comment.user.last_name}} : {{comment.updated_at}}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <form  class="mt-2" style="margin-left: 820px;" action="/add_comment" method="POST">
+                        {% csrf_token %}
+                        <input type = "hidden" value="{{moment.id}}" name="moment_id">
+                        <input type = "text" name="comment">
+                        <button class="btn-sm btn-danger text-white" submit">Comment</button>
+    
+                    </form>
+                {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+  </div>  
+
+</body>
+</html>
